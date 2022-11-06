@@ -7,8 +7,9 @@
         "default_title": "Import CSV"
     },
     "description": "Firefox extension with useful tools for Mint",
+    "homepage_url": "https://github.com/hvmptydvmpty/spearmint",
     "manifest_version": 2,
     "name": "Spearmint",
-    "permissions": ["clipboardWrite", "notifications", "webNavigation", "tabs"],
+    "permissions": ["activeTab", "clipboardWrite", "notifications", "webNavigation"],
     "version": "0.1.0"
 }
