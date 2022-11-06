@@ -6,6 +6,11 @@ Firefox Extension for Mint
 
 .. _`Firefox Extension`: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Anatomy_of_a_WebExtension
 
+.. |codeql-badge| image:: https://github.com/hvmptydvmpty/spearmint/actions/workflows/codeql.yml/badge.svg
+.. |eslint-badge| image:: https://github.com/hvmptydvmpty/spearmint/actions/workflows/eslint.yml/badge.svg
+
+|codeql-badge| |eslint-badge|
+
 Motivation
 ==========
 
