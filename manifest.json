@@ -1,0 +1,21 @@
+{
+  "background": {
+    "scripts": ["main.js"]
+  },
+  "browser_action": {
+    "default_title": "Import CSV"
+  },
+  "content_security_policy": "script-src 'self' https://example.com; object-src 'self'",
+  "content_scripts": [
+    {
+      "matches": ["*://mint.intuit.com/*"],
+      "js": ["borderify.js"]
+    }
+  ],
+  "default_locale": "en",
+  "description": "Firefox extension with useful tools for Mint",
+  "manifest_version": 3,
+  "name": "Spearmint",
+  "permissions": ["clipboardWrite", "notifications", "webNavigation", "tabs"],
+  "version": "0.1.0"
+}
