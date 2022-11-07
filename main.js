@@ -20,3 +20,7 @@ async function importCsv() {
 }
 
 browser.browserAction.onClicked.addListener(importCsv);
+
+browser.runtime.onInstalled.addListener(function(details) {
+    console.log(`Extension install event: ${details.reason}, temporary: ${details.temporary}`);
+});
