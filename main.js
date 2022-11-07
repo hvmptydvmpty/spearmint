@@ -1,3 +1,5 @@
+"use strict";
+
 async function notify(title, message) {
     await browser.notifications.create({
         type: "basic",
@@ -6,9 +8,20 @@ async function notify(title, message) {
     });
 }
 
-async function importCsv() {
-    const tabs = await browser.tabs.query({active: true, currentWindow: true});
-    console.log({tabs});
+browser.runtime.onInstalled.addListener(function(details) {
+    console.log(`Extension install event: ${details.reason}, temporary: ${details.temporary}`);
+    browser.browserAction.disable();
+});
+
+async function import_csv(tab, click_data) {
+    fetch(`${tab.url}/post`, {
+        credentials: "include"
+    }).then(
+        (response) => response.json()
+    ).then(
+        (data) => console.log(data)
+    );
+
     navigator.clipboard.writeText("hello").then(
         async function() {
             await notify("Copied", "Clipboard contains your info");
@@ -19,8 +32,20 @@ async function importCsv() {
     );
 }
 
-browser.browserAction.onClicked.addListener(importCsv);
+browser.browserAction.onClicked.addListener(import_csv);
 
-browser.runtime.onInstalled.addListener(function(details) {
-    console.log(`Extension install event: ${details.reason}, temporary: ${details.temporary}`);
+function on_tab_activated(active_info) {
+    browser.browserAction.disable();
+};
+
+browser.tabs.onActivated.addListener(on_tab_activated);
+
+function on_navigation_completed(details) {
+    browser.browserAction.enable();
+}
+
+browser.webNavigation.onCompleted.addListener(on_navigation_completed, {
+    url: [{
+        hostEquals: "mint.intuit.com"
+    }]
 });
