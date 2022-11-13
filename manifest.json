@@ -6,6 +6,13 @@
         "default_icon": {},
         "default_title": "Import CSV"
     },
+    "content_scripts": [
+        {
+            "matches": ["*://mint.intuit.com/*"],
+	    "css": ["importer.css"],
+            "js": ["importer.js"]
+        }
+    ],
     "description": "Firefox extension with useful tools for Mint",
     "homepage_url": "https://github.com/hvmptydvmpty/spearmint",
     "manifest_version": 2,
