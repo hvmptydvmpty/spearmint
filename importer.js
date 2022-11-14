@@ -3,6 +3,10 @@
 const block_id = "_spearmint-importer-block";
 
 function insert() {
+    if (null == document.body) {
+        return;
+    }
+
     var current = document.getElementById(block_id);
     if (current != null) {
         current.remove();
@@ -42,16 +46,49 @@ function insert() {
 }
 
 async function do_import(event) {
-    const response = await fetch(`${window.origin}/post`, {
-        credentials: "include"
-    });
-    if (!response.ok) {
-        window.alert(`Failure\nSubmission failed: ${response.statusText} (${response.status})`);
-    }
-    else {
-        const text = await response.text();
-        window.alert(`Success\nCSV submitted. Please check transactions page\n${text}`);
-    }
+    const intuit_apikey = "";
+    var categories;
+
+    fetch(`${window.origin}/pfm/v1/categories`, {
+        credentials: "include",
+        "headers": {
+            "Accept": "application/json, text/plain, */*",
+            // "Accept-Language": "en-US,en;q=0.5",
+            // "intuit_tid": crypto.randomUUID(),
+            "Authorization": `Intuit_APIKey intuit_apikey=${intuit_apikey},intuit_apikey_version=1.0`
+            // "Sec-Fetch-Dest": "empty",
+            // "Sec-Fetch-Mode": "cors",
+            // "Sec-Fetch-Site": "same-origin"
+        },
+        // "referrer": "https://mint.intuit.com/categories?from=TRANSACTIONS",
+        // "method": "GET",
+        "mode": "cors"
+    }).then(
+        (response) => response.ok
+            ? response.json()
+            : Promise.reject(`categories failed to download: ${response.statusText} (${response.status})`)
+    ).then(
+        (json) => {
+            categories = json;
+            console.log(`${categories.length} categories`);
+            return fetch(`${window.origin}/updateTransaction.xevent`, {
+                credentials: "include",
+                data: {
+                    // TODO
+                }
+            });
+        }
+    ).then(
+        (response) => response.ok
+            ? response.text()
+            : Promise.reject(`submission failed: ${response.statusText} (${response.status})`)
+    ).then(
+        (text) => {
+            window.alert(`Success\nCSV submitted. Please check transactions page\n${text}`);
+            return Promise.resolve(text);
+        }
+    );
+
 }
 
 insert();
