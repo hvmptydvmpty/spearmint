@@ -2,14 +2,10 @@
     "background": {
         "scripts": ["main.js"]
     },
-    "browser_action": {
-        "default_icon": {},
-        "default_title": "Import CSV"
-    },
     "content_scripts": [
         {
             "matches": ["*://mint.intuit.com/*"],
-	    "css": ["importer.css"],
+            "css": ["importer.css"],
             "js": ["importer.js"]
         }
     ],

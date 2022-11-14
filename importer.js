@@ -42,7 +42,16 @@ function insert() {
 }
 
 async function do_import(event) {
-    window.alert("about to fetch...");
+    const response = await fetch(`${window.origin}/post`, {
+        credentials: "include"
+    });
+    if (!response.ok) {
+        window.alert(`Failure\nSubmission failed: ${response.statusText} (${response.status})`);
+    }
+    else {
+        const text = await response.text();
+        window.alert(`Success\nCSV submitted. Please check transactions page\n${text}`);
+    }
 }
 
 insert();
