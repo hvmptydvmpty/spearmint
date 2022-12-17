@@ -46,37 +46,94 @@ function insert() {
 }
 
 async function do_import(event) {
-    const intuit_apikey = "";
+    const intuit_apikey = window.__shellInternal.appExperience.appApiKey;
     var categories;
 
-    fetch(`${window.origin}/pfm/v1/categories`, {
+    fetch("/pfm/v1/categories", {
         credentials: "include",
-        "headers": {
+        headers: {
             "Accept": "application/json, text/plain, */*",
-            // "Accept-Language": "en-US,en;q=0.5",
             // "intuit_tid": crypto.randomUUID(),
             "Authorization": `Intuit_APIKey intuit_apikey=${intuit_apikey},intuit_apikey_version=1.0`
-            // "Sec-Fetch-Dest": "empty",
-            // "Sec-Fetch-Mode": "cors",
-            // "Sec-Fetch-Site": "same-origin"
         },
-        // "referrer": "https://mint.intuit.com/categories?from=TRANSACTIONS",
+        referrer: `${window.origin}/transactions`,
         // "method": "GET",
-        "mode": "cors"
+        mode: "cors"
     }).then(
         (response) => response.ok
             ? response.json()
             : Promise.reject(`categories failed to download: ${response.statusText} (${response.status})`)
     ).then(
         (json) => {
-            categories = json;
-            console.log(`${categories.length} categories`);
-            return fetch(`${window.origin}/updateTransaction.xevent`, {
+            const categories = json.Category; // array
+            console.log("categories", json.metadata);
+
+            /* example
+            {
+                "type": "Category",
+                "name": "Entertainment",
+                "depth": 1,
+                "categoryType": "EXPENSE",
+                "isBusiness": false,
+                "isCustom": false,
+                "isUnassignable": false,
+                "isUnbudgetable": false,
+                "isUntrendable": false,
+                "isIgnored": false,
+                "isEditable": false,
+                "isDeleted": false,
+                "discretionaryType": "DISCRETIONARY",
+                "metaData": {
+                    "lastUpdatedDate": "2020-11-18T07:31:47Z",
+                    "link": [
+                        {
+                            "otherAttributes": {},
+                            "href": "/v1/categories/90767559_1",
+                            "rel": "self"
+                        }
+                    ]
+                },
+                "id": "90767559_1"
+            }
+            */        
+            
+            const data = {
+                "date": "2022-12-14",
+                "description": "Description***HOLDER",
+                "category": {
+                    "id": "90767559_709",
+                    "name": null
+                },
+                "accountId": null,
+                "amount": -12.34,
+                "parentId": null,
+                "type": "CashAndCreditTransaction",
+                "id": null,
+                "isExpense": true,
+                "isPending": false,
+                "isDuplicate": false,
+                "tagData": null,
+                "splitData": null,
+                "manualTransactionType": "CASH",
+                "checkNumber": null,
+                "isLinkedToRule": false,
+                "shouldPullFromAtmWithdrawals": false,
+                "notes": "Notes***HOLDER"
+            };
+            return fetch("/pfm/v1/transactions", {
                 credentials: "include",
-                data: {
-                    // TODO
-                }
-            });
+                headers: {
+                    "Accept": "application/json, text/plain, */*",
+                    //"Accept-Language": "en-US,en;q=0.5",
+                    "Content-Type": "application/json",
+                    //"intuit_tid": "47554052-3188-41f0-8c2d-ca1f2ea7434f",
+                    "Authorization": `Intuit_APIKey intuit_apikey=${intuit_apikey},intuit_apikey_version=1.0`,
+                },
+                referrer: `${window.origin}/transactions`,
+                body: window.JSON.stringify(data),
+                method: "POST",
+                mode: "cors"
+            });            
         }
     ).then(
         (response) => response.ok
