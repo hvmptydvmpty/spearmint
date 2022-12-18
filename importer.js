@@ -65,7 +65,7 @@ async function do_import(event) {
             : Promise.reject(`categories failed to download: ${response.statusText} (${response.status})`)
     ).then(
         (json) => {
-            const categories = json.Category; // array
+            categories = json.Category; // array
             console.log("categories", json.metadata);
 
             /* example
@@ -99,7 +99,7 @@ async function do_import(event) {
             
             const data = {
                 "date": "2022-12-14",
-                "description": "Description***HOLDER",
+                "description": "Some words",
                 "category": {
                     "id": "90767559_709",
                     "name": null
@@ -118,16 +118,15 @@ async function do_import(event) {
                 "checkNumber": null,
                 "isLinkedToRule": false,
                 "shouldPullFromAtmWithdrawals": false,
-                "notes": "Notes***HOLDER"
+                "notes": "Notable words"
             };
             return fetch("/pfm/v1/transactions", {
                 credentials: "include",
                 headers: {
                     "Accept": "application/json, text/plain, */*",
-                    //"Accept-Language": "en-US,en;q=0.5",
                     "Content-Type": "application/json",
                     //"intuit_tid": "47554052-3188-41f0-8c2d-ca1f2ea7434f",
-                    "Authorization": `Intuit_APIKey intuit_apikey=${intuit_apikey},intuit_apikey_version=1.0`,
+                    "Authorization": `Intuit_APIKey intuit_apikey=${intuit_apikey},intuit_apikey_version=1.0`
                 },
                 referrer: `${window.origin}/transactions`,
                 body: window.JSON.stringify(data),
